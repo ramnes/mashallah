@@ -47,6 +47,13 @@ def test_nonnull():
     assert not "bar" in input.errors
 
 
+def test_errors_format():
+    input = DumbInput({"bar": ""})
+    assert input.errors["foo"] == "missing required value"
+    assert isinstance(input.errors["bar"], list)
+    assert len(input.errors["bar"]) == 2
+
+
 def test_required():
     input = DumbInput({})
     assert not input.valid

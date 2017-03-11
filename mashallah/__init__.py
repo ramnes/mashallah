@@ -3,11 +3,12 @@ from mashallah.validators import required
 
 def validate(value, typ, *validators):
     def _validate(value):
+        errors = []
         if value is not None and not isinstance(value, typ):
             message = "should be of type {} (is {})"
             message = message.format(typ.__name__, type(value).__name__)
-            raise TypeError(message)
-        return value
+            errors.append(message)
+        return value, errors
 
     for validator in validators:
         _validate = validator(_validate)
@@ -37,10 +38,13 @@ class Input(object):
                 if required in validators:
                     errors[field] = "missing required value"
                 continue
-            try:
-                output[field] = validate(value, typ, *validators)
-            except Exception as exception:
-                errors[field] = str(exception)
+            field_output, field_errors = validate(value, typ, *validators)
+            if field_errors and len(field_errors) == 1:
+                errors[field] = field_errors[0]
+            elif field_errors:
+                errors[field] = field_errors
+            else:
+                output[field] = field_output
         return output, errors
 
     @classmethod

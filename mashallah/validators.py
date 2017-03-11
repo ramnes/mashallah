@@ -1,33 +1,33 @@
 def length(min=None, max=None):
     def validator(function):
         def validate(value):
-            output = function(value)
-            if (output is not None
-                and (min is not None and len(output) < min
-                     or max is not None and len(output) > max)):
+            output, errors = function(value)
+            if (value is not None
+                and (min is not None and len(value) < min
+                     or max is not None and len(value) > max)):
                 message = "should have a length between {} and {} (is {})"
-                message = message.format(min, max, len(output))
-                raise ValueError(message)
-            return output
+                message = message.format(min, max, len(value))
+                errors.append(message)
+            return output, errors
         return validate
     return validator
 
 
 def nonempty(function):
     def validate(value):
-        output = function(value)
-        if output is not None and not output:
-            raise TypeError("shouldn't be empty")
-        return output
+        output, errors = function(value)
+        if value is not None and not value:
+            errors.append("shouldn't be empty")
+        return output, errors
     return validate
 
 
 def nonnull(function):
     def validate(value):
-        output = function(value)
-        if output is None:
-            raise TypeError("shouldn't be null")
-        return output
+        output, errors = function(value)
+        if value is None:
+            errors.append("shouldn't be null")
+        return output, errors
     return validate
 
 
