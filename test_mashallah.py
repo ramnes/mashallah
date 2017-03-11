@@ -59,3 +59,18 @@ def test_required():
     assert not input.valid
     assert "foo" in input.errors
     assert not "bar" in input.errors
+
+
+class NestedInput(Input):
+    bar = str, required, nonempty, length(min=5, max=10)
+
+
+class DumbInput2(Input):
+    foo = NestedInput, required
+
+
+def test_nested():
+    assert DumbInput2({"foo": {"bar": "bazqux"}}).valid
+    assert DumbInput2({"foo": None}).valid
+    assert not DumbInput2({"foo": {"bar": "baz"}}).valid
+    assert not DumbInput2({"foo": {}}).valid

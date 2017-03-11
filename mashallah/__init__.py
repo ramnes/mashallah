@@ -4,9 +4,12 @@ from mashallah.validators import required
 def validate(value, typ, *validators):
     def _validate(value):
         errors = []
-        if value is not None and not isinstance(value, typ):
+        if issubclass(typ, Input) and isinstance(value, dict):
+            value, errors = typ.process(value)
+        elif value is not None and not isinstance(value, typ):
             message = "should be of type {} (is {})"
-            message = message.format(typ.__name__, type(value).__name__)
+            typ_name = "dict" if issubclass(typ, Input) else typ.__name__
+            message = message.format(typ_name, type(value).__name__)
             errors.append(message)
         return value, errors
 
@@ -39,9 +42,7 @@ class Input(object):
                     errors[field] = "missing required value"
                 continue
             field_output, field_errors = validate(value, typ, *validators)
-            if field_errors and len(field_errors) == 1:
-                errors[field] = field_errors[0]
-            elif field_errors:
+            if field_errors:
                 errors[field] = field_errors
             else:
                 output[field] = field_output
