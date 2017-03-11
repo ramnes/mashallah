@@ -26,10 +26,11 @@ class Input(object):
         values = [self.__class__.__module__, self.__class__.__name__, items]
         return "<{}.{}({})>".format(*values)
 
-    def process(self, data):
+    @classmethod
+    def process(cls, data):
         output = {}
         errors = {}
-        for field, typ, validators in self.fields:
+        for field, typ, validators in cls.iterfields():
             try:
                 value = data[field]
             except KeyError:
@@ -42,9 +43,9 @@ class Input(object):
                 errors[field] = str(exception)
         return output, errors
 
-    @property
-    def fields(self):
-        for key, value in self.__class__.__dict__.items():
+    @classmethod
+    def iterfields(cls):
+        for key, value in cls.__dict__.items():
             if (isinstance(value, tuple) and value
                 and isinstance(value[0], type)):
                 yield key, value[0], value[1:]
