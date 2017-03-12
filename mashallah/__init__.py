@@ -6,7 +6,7 @@ def validate(value, typ, *validators):
         errors = []
         if issubclass(typ, Input) and isinstance(value, dict):
             value, errors = typ.process(value)
-        elif value is not None and not isinstance(value, typ):
+        elif not isinstance(value, typ):
             message = "should be of type {} (is {})"
             typ_name = "dict" if issubclass(typ, Input) else typ.__name__
             message = message.format(typ_name, type(value).__name__)

@@ -1,5 +1,5 @@
 from mashallah import Input
-from mashallah.validators import length, nonempty, nonnull, required
+from mashallah.validators import length, nonempty, nullable, required
 
 
 def test_repr():
@@ -16,8 +16,8 @@ def test_repr():
 
 
 class DumbInput(Input):
-    foo = int, nonnull, required
-    bar = str, nonempty, length(min=5, max=10)
+    foo = int, required
+    bar = str, nullable, nonempty, length(min=5, max=10)
 
 
 def test_type_validation():
@@ -40,7 +40,7 @@ def test_nonempty():
     assert not "foo" in input.errors
 
 
-def test_nonnull():
+def test_nullable():
     input = DumbInput({"foo": None, "bar": None})
     assert not input.valid
     assert "foo" in input.errors
@@ -66,7 +66,7 @@ class NestedInput(Input):
 
 
 class DumbInput2(Input):
-    foo = NestedInput, required
+    foo = NestedInput, nullable, required
 
 
 def test_nested():

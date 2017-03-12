@@ -22,11 +22,11 @@ def nonempty(function):
     return validate
 
 
-def nonnull(function):
+def nullable(function):
     def validate(value):
         output, errors = function(value)
         if value is None:
-            errors.append("shouldn't be null")
+            errors.pop(0)
         return output, errors
     return validate
 
@@ -35,4 +35,4 @@ def required(function):
     return function
 
 
-__all__ = ["length", "nonempty", "nonnull", "required"]
+__all__ = ["length", "nonempty", "nullable", "required"]
