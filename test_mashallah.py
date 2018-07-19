@@ -22,7 +22,7 @@ def test_type_validation():
     input = DumbInput({"foo": "3", "bar": "bazqux"})
     assert not input.valid
     assert "foo" in input.errors
-    assert not "bar" in input.errors
+    assert "bar" not in input.errors
 
 
 def test_length():
@@ -35,14 +35,14 @@ def test_nonempty():
     input = DumbInput({"foo": 3, "bar": ""})
     assert not input.valid
     assert "bar" in input.errors
-    assert not "foo" in input.errors
+    assert "foo" not in input.errors
 
 
 def test_nullable():
     input = DumbInput({"foo": None, "bar": None})
     assert not input.valid
     assert "foo" in input.errors
-    assert not "bar" in input.errors
+    assert "bar" not in input.errors
 
 
 def test_errors_format():
@@ -56,7 +56,7 @@ def test_required():
     input = DumbInput({})
     assert not input.valid
     assert "foo" in input.errors
-    assert not "bar" in input.errors
+    assert "bar" not in input.errors
 
 
 class NestedInput(Input):
