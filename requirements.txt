@@ -1,0 +1,6 @@
+ipython
+isort
+flake8
+flake8-isort
+pytest
+pytest-cov
