@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from mashallah.validators import required
 
 
@@ -18,17 +19,11 @@ def validate(value, typ, *validators):
     return _validate(value)
 
 
-class Input(object):
+class Input(SimpleNamespace):
 
-    def __init__(self, data):
+    def __init__(self, data, **kwargs):
+        super().__init__(**kwargs)
         self.output, self.errors = self.process(data)
-
-    def __repr__(self):
-        items = [(key, str(value)) for key, value in self.__dict__.items()]
-        items = ["=".join(item) for item in items]
-        items = ", ".join(items)
-        values = [self.__class__.__module__, self.__class__.__name__, items]
-        return "<{}.{}({})>".format(*values)
 
     @classmethod
     def process(cls, data):

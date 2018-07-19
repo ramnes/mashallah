@@ -5,8 +5,6 @@ from mashallah.validators import length, nonempty, nullable, required
 def test_repr():
     input = Input({})
 
-    assert repr(input).startswith("<mashallah.Input(")
-    assert repr(input).endswith(")>")
     for key in input.__dict__.keys():
         assert key in repr(input)
 
